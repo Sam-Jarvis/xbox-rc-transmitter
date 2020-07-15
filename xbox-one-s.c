@@ -5,6 +5,8 @@
 #include <signal.h>
 #include <stdlib.h>
 
+libusb_device_handle *h;
+
 void read_controller(){
     
     libusb_init(NULL);
@@ -15,7 +17,6 @@ void read_controller(){
 	int timeout = 2000;
 
     // attach handle
-    libusb_device_handle *h;
 	h = libusb_open_device_with_vid_pid(NULL, 0x24c6, 0x581b);
 
     /*
@@ -32,7 +33,7 @@ void read_controller(){
 	}
     else
     {
-        printf("%s\n", "sucessfully opened device");
+        printf("%s\n", "successfully opened device");
     }
     
 
@@ -44,7 +45,7 @@ void read_controller(){
 	}
     else
     {
-        printf("%s\n", "sucessfully detached kernel");
+        printf("%s\n", "successfully detached kernel");
     }
 
     // 3
@@ -55,7 +56,7 @@ void read_controller(){
 	}
     else
     {
-        printf("%s\n", "sucessfully claimed interface");
+        printf("%s\n", "successfully claimed interface");
     }
 
     int opt;
@@ -82,11 +83,11 @@ void read_controller(){
         libusb_interrupt_transfer(h, endpoint, read_data, sizeof(read_data), &transferred, timeout);
                 
         for(int x=0; x < transferred; x++) {
-        printf("%02x ", read_data[x]);
+        //printf("%02x ", read_data[x]);
 		}
-        printf("\n");
+        //printf("\n");
 
-        /*
+        
         printf("Message type: %02x \n", read_data[0]);
         printf("D-Pad: %02x \n", read_data[5]);
         printf("Buttons: %02x \n", read_data[4]);
@@ -98,13 +99,36 @@ void read_controller(){
         printf("R-stick Y: %02x \n", read_data[16]);
 
         printf("\n");
-        */
+        
         }
 }
 
 void termination_handler(int signum)
 {
-    printf("%s\n", "killing...");
+    int rls_crm = libusb_release_interface(h, 0);
+    if(rls_crm != 0)
+    {
+        perror("device release failed");
+    }
+    else
+    {
+        printf("\n%s\n", "successfully released device");
+    }
+    
+
+    int at_crm = libusb_attach_kernel_driver(h, 0);
+    if(at_crm != 0)
+    {
+        perror("kernel attach failed");
+    }
+    else
+    {
+        printf("%s\n", "successfully attached kernel driver");
+    }
+
+    libusb_close(h);
+
+    printf("\n%s\n", "killed.");
     exit(0);
 }
 
