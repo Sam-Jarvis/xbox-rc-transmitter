@@ -2,9 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <pthread.h>
+#include <signal.h>
+#include <stdlib.h>
 
-static void* read_controller(){
+void read_controller(){
     
     libusb_init(NULL);
     char read_data[512];
@@ -15,12 +16,6 @@ static void* read_controller(){
 
     // attach handle
     libusb_device_handle *h;
-
-    if (pthread_detach (pthread_self ()) != 0)
-    {
-        perror ("pthread_detach(read_controller)");
-    }
-
 	h = libusb_open_device_with_vid_pid(NULL, 0x24c6, 0x581b);
 
     /*
@@ -105,36 +100,19 @@ static void* read_controller(){
         printf("\n");
         */
         }
-        return(NULL);
 }
 
-void keyboard_watchdog(){
-    char input[1];
-
-    if (pthread_detach (pthread_self ()) != 0)
-    {
-        perror ("pthread_detach(watchdog)");
-    }
-
-    scanf("%s", input);
-    printf("%s\n", input[0]);
-
+void termination_handler(int signum)
+{
+    printf("%s\n", "killing...");
+    exit(0);
 }
 
 int main(int argc, char *argv[])
 {
 	// command to send
     //unsigned char data[] = {  };
-    pthread_t watchdog;
-    pthread_t read;
-
-    if (pthread_create (&watchdog, NULL, keyboard_watchdog, (void *) 300000) != 0)
-    {
-        perror ("watchdog");
-    }
-
-    if (pthread_create (&read, NULL, read_controller, (void *) 300000) != 0)
-    {
-        perror ("watchdog");
-    }     
+    
+    signal(SIGINT, termination_handler);
+    read_controller();
 }
