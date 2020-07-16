@@ -40,6 +40,7 @@ struct XboxOneButtonData {
 	int16_t stick_right_y;
 };
 
-int grab_controller();
+int open_controller();
+int close_controller();
 void read_controller();
 void termination_handler(int);

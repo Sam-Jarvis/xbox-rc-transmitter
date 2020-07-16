@@ -2,7 +2,7 @@
 
 libusb_device_handle *h;
 
-int grab_controller(){
+int open_controller(){
 
     /*
         General method:
@@ -56,18 +56,46 @@ int grab_controller(){
     return 0;
 }
 
+int close_controller(){
+
+    int rls_crm = libusb_release_interface(h, 0);
+    if (rls_crm != 0)
+    {
+        perror("device release failed");
+        return 1;
+    }
+    else
+    {
+        printf("\n%s\n", "successfully released device");
+    }
+
+    int at_crm = libusb_attach_kernel_driver(h, 0);
+    if (at_crm != 0)
+    {
+        perror("kernel attach failed");
+        return 1;
+    }
+    else
+    {
+        printf("%s\n", "successfully attached kernel driver");
+    }
+
+    libusb_close(h);
+    return 0;
+}
+
+
 void read_controller()
 {
 
-    char read_data[512];
-    int error, transferred, received;
+    unsigned char read_data[512];
+    int transferred;
 
     int endpoint = 0x01;
     int timeout = 2000;
     
-    int opt;
-
     /*
+    int opt;
     while((opt = getopt(argc, argv, ":if:rls")) != -1)
 	{
 		switch(opt)
@@ -80,7 +108,7 @@ void read_controller()
             printf("%s\n", "");
     */
 
-    grab_controller();
+    open_controller();
 
     memset(read_data, 0, 3);
     endpoint = 0x81;
@@ -107,19 +135,10 @@ void read_controller()
         data.stick_right_x = read_data[14];
         data.stick_right_y = read_data[16];
 
-        uint8_t button = read_data[4];
-        switch (button)
-        {
-        case 0x02:
-            /* code */
-            break;
         
-        default:
-            break;
-        }
+        printf("Message type: %02x \n", data.type);
 
         /*
-        printf("Message type: %02x \n", read_data[0]);
         printf("D-Pad: %02x \n", read_data[5]);
         printf("Buttons: %02x \n", read_data[4]);
         printf("R-Trig: %02x \n", read_data[8]);
@@ -132,34 +151,6 @@ void read_controller()
         printf("\n");
         */
     }
-}
-
-void termination_handler(int signum)
-{
-    int rls_crm = libusb_release_interface(h, 0);
-    if (rls_crm != 0)
-    {
-        perror("device release failed");
-    }
-    else
-    {
-        printf("\n%s\n", "successfully released device");
-    }
-
-    int at_crm = libusb_attach_kernel_driver(h, 0);
-    if (at_crm != 0)
-    {
-        perror("kernel attach failed");
-    }
-    else
-    {
-        printf("%s\n", "successfully attached kernel driver");
-    }
-
-    libusb_close(h);
-
-    printf("\n%s\n", "killed.");
-    exit(0);
 }
 
 
