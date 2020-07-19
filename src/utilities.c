@@ -84,6 +84,28 @@ int close_controller(){
     return 0;
 }
 
+void user_input()
+{
+    char line[16];
+    char c = ' ';
+
+    printf("\n%s\n", "Enter choice: ");
+
+    if (fgets(line, sizeof(line), stdin)) {
+        if (1 == sscanf(line, "%s", &c)) {
+            switch(c)
+            {
+                case 'q':
+                    close_controller();
+                    exit(0);
+
+                case 'r':
+                    read_controller();
+                    break;
+            }
+        }
+    }    
+}
 
 void read_controller()
 {
@@ -119,13 +141,13 @@ void read_controller()
     {
         libusb_interrupt_transfer(h, endpoint, read_data, sizeof(read_data), &transferred, timeout);
 
-        /*
+        
         for (int x = 0; x < transferred; x++)
         {
             printf("%02x ", read_data[x]);
         }
         printf("\n");
-        */
+        
 
         struct XboxOneButtonData data;
 
@@ -136,7 +158,7 @@ void read_controller()
         data.stick_right_y = read_data[16];
 
         
-        printf("Message type: %02x \n", data.type);
+        //printf("Message type: %02x \n", data.type);
 
         /*
         printf("D-Pad: %02x \n", read_data[5]);

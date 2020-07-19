@@ -42,5 +42,6 @@ struct XboxOneButtonData {
 
 int open_controller();
 int close_controller();
+void user_input();
 void read_controller();
 void termination_handler(int);
