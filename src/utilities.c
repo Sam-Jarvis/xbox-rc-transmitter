@@ -1,11 +1,6 @@
 #include "utilities.h"
 
 libusb_device_handle *h;
-bool wasOpened = false;
-
-unsigned char read_data[512];
-int transferred;
-//void *t = memset(read_data, 0, 5);
 
 int open_controller()
 {
@@ -59,79 +54,53 @@ int open_controller()
     {
         printf("%s\n", "successfully claimed interface");
     }
-    wasOpened = true;
+
+    /*
+    int test;
+    unsigned char buffer[8];
+    
+
+    if(libusb_interrupt_transfer(h, 0x01, buffer, sizeof(buffer), &test, 2000) != 0) {
+        perror("Transfer failed: ");
+    }
+    else
+    {
+        printf("%s\n", "sent start message");
+    }
+    */
     return 0;
 }
 
 int close_controller()
 {
-    if (wasOpened)
-    {
-        int rls_crm = libusb_release_interface(h, 0);
-        if (rls_crm != 0)
-        {
-            perror("device release failed");
-            return 1;
-        }
-        else
-        {
-            printf("\n%s\n", "successfully released device");
-        }
 
-        int at_crm = libusb_attach_kernel_driver(h, 0);
-        if (at_crm != 0)
-        {
-            perror("kernel attach failed");
-            return 1;
-        }
-        else
-        {
-            printf("%s\n", "successfully attached kernel driver");
-        }
+    int rls_crm = libusb_release_interface(h, 0);
+    if (rls_crm != 0)
+    {
+        perror("device release failed");
+        return 1;
     }
+    else
+    {
+        printf("\n%s\n", "successfully released device");
+    }
+
+    int at_crm = libusb_attach_kernel_driver(h, 0);
+    if (at_crm != 0)
+    {
+        perror("kernel attach failed");
+        return 1;
+    }
+    else
+    {
+        printf("%s\n", "successfully attached kernel driver");
+    }
+
     libusb_close(h);
     return 0;
 }
 
-void user_input(unsigned char* read_data, int *transferred)
-{
-    char line[16];
-    char c = ' ';
-
-    unsigned char *buff;
-
-    printf("\n%s\n", "What would you like me to do?: \n");
-    printf("%s\n", "q --> quit");
-    printf("%s\n", "r --> read");
-    printf("%s\n", "d --> debug read\n");
-
-    if (fgets(line, sizeof(line), stdin))
-    {
-        if (1 == sscanf(line, "%s", &c))
-        {
-            switch (c)
-            {
-            case 'q':
-                close_controller();
-                exit(0);
-
-            case 'r':
-                read_controller(false);
-                break;
-
-            case 'd':
-                buff = test(read_data, transferred);
-                while(1){
-                    print_controller_state(true, buff, transferred);
-                }
-                //read_controller(true);
-                break;
-            }
-        }
-    }
-}
-
-void print_controller_state(bool debug, unsigned char *read_data, int *transferred)
+void print_controller_state(bool debug, unsigned char *read_data, int transferred)
 {
     if (debug)
     {
@@ -154,17 +123,15 @@ void print_controller_state(bool debug, unsigned char *read_data, int *transferr
     printf("\n");
 }
 
-unsigned char *test(unsigned char* read_data, int *transferred)
+struct XboxOneButtonData *store_data(unsigned char *read_data, struct XboxOneButtonData *controller_state)
 {
-    int endpoint = 0x81;
-    int timeout = 2000;
+    controller_state->type = read_data[0];
+    controller_state->stick_left_x = read_data[10];
+    controller_state->stick_left_y = read_data[12];
+    controller_state->stick_right_x = read_data[14];
+    controller_state->stick_right_y = read_data[16];
 
-    open_controller();
-    memset(read_data, 0, 5);
-
-    libusb_interrupt_transfer(h, endpoint, read_data, sizeof(read_data), &transferred, timeout);
-
-    return read_data;
+    return controller_state;
 }
 
 void read_controller(bool debug)
@@ -175,19 +142,6 @@ void read_controller(bool debug)
     int endpoint = 0x81;
     int timeout = 2000;
 
-    /*
-    int opt;
-    while((opt = getopt(argc, argv, ":if:rls")) != -1)
-	{
-		switch(opt)
-		{
-			case 'r':
-
-			break;
-
-            default:
-            printf("%s\n", "");
-    */
     open_controller();
 
     printf("%s\n", "Reading controller state ...");
@@ -208,19 +162,9 @@ void read_controller(bool debug)
         /*
         struct XboxOneButtonData data;
 
-        data.type = read_data[0];
-        data.stick_left_x = read_data[10];
-        data.stick_left_y = read_data[12];
-        data.stick_right_x = read_data[14];
-        data.stick_right_y = read_data[16];
+
 
         printf("Message type: %02x \n", data.type);
         */
     }
 }
-
-/*
-if ((error = libusb_interrupt_transfer(h, 0x01, data_rumble, sizeof(data_rumble), &transferred, 2000)) != 0) {
-    printf("Transfer failed: %d\n", error);
-}
-*/
