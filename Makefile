@@ -1,13 +1,15 @@
 # Generic Makefile
 #
-# Author: yanick.rochon@gmail.com
-# Date  : 2011-08-10
+# Author: yanick.rochon@gmail.com, Date: 2011-08-10
+# Edited: samjarvis.nam@gmail.com, Date: 2020-07-16
 #
 # Changelog :
 #   2010-11-05 - first version
 #   2011-08-10 - added structure : sources, objects, binaries
 #                thanks to http://stackoverflow.com/users/128940/beta
 #   2017-04-24 - changed order of linker params
+#
+#	2020-07-16 - added flags, fixed tabs
 # ------------------------------------------------
 
 # project name (generate executable with this name)

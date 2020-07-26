@@ -8,28 +8,31 @@
 
 struct XboxOneButtonData {
 	uint8_t type;
-	uint8_t const_0;
 	uint16_t id;
 
 	bool sync : 1;
-	bool dummy1 : 1;  // Always 0.
-	bool start : 1;
-	bool back : 1;
 
-	bool a : 1;
-	bool b : 1;
-	bool x : 1;
-	bool y : 1;
+	uint8_t button;
+/* 	read_data[4]
+	bool a : 1; 0x10
+	bool b : 1; 0x20
+	bool x : 1; 0x40
+	bool y : 1; 0x80
+	bool start : 0x08;
+	bool back : 0x04;
+*/
 
-	bool dpad_up : 1;
-	bool dpad_down : 1;
-	bool dpad_left : 1;
-	bool dpad_right : 1;
-
-	bool bumper_left : 1;
-	bool bumper_right : 1;
-	bool stick_left_click : 1;
-	bool stick_right_click : 1;
+	uint8_t dpad;
+/*	read_data[5]
+	bool dpad_up : 1; 0x01
+	bool dpad_down : 1; 0x02
+	bool dpad_left : 1; 0x04
+	bool dpad_right : 1; 0x08
+	bool bumper_left : 1; 0x10
+	bool bumper_right : 1; 0x20
+	bool stick_left_click : 1; 0x40
+	bool stick_right_click : 1; 0x80
+*/
 
 	uint16_t trigger_left;
 	uint16_t trigger_right;

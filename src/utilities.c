@@ -126,6 +126,14 @@ void print_controller_state(bool debug, unsigned char *read_data, int transferre
 struct XboxOneButtonData *store_data(unsigned char *read_data, struct XboxOneButtonData *controller_state)
 {
     controller_state->type = read_data[0];
+    controller_state->id = read_data[2];
+
+    controller_state->button = read_data[4];
+    controller_state->dpad = read_data[5];
+
+    controller_state->trigger_left = read_data[6];
+    controller_state->trigger_right = read_data[8];
+
     controller_state->stick_left_x = read_data[10];
     controller_state->stick_left_y = read_data[12];
     controller_state->stick_right_x = read_data[14];

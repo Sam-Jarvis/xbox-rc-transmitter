@@ -1,7 +1,7 @@
 #include "utilities.h"
 
 libusb_device_handle *h;
-struct XboxOneButtonData data;
+struct XboxOneButtonData data = {0};
 
 void termination_handler(int signum)
 {
@@ -98,4 +98,23 @@ while((opt = getopt(argc, argv, ":if:rls")) != -1)
 if ((error = libusb_interrupt_transfer(h, 0x01, data_rumble, sizeof(data_rumble), &transferred, 2000)) != 0) {
     printf("Transfer failed: %d\n", error);
 }
+*/
+
+/*
+    if(read_data[4] > 0x40)
+    {
+        controller_state->y = true;
+    }
+    else if(read_data[4] > 0x20)
+    {
+        controller_state->x = true;
+    }
+    else if(read_data[4] > 0x10)
+    {
+        controller_state->b = true;
+    }
+    else
+    {
+        controller_state->a = true;
+    }
 */
