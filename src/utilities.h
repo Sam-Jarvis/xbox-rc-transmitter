@@ -5,15 +5,19 @@
 #include <unistd.h>
 #include <signal.h>
 #include <stdlib.h>
+//#include <RF24-master/SPI.h>
+//#include <nRF24L01.h>
+#include <RF24.h>
 
-struct XboxOneButtonData {
+struct XboxOneButtonData
+{
 	uint8_t type;
 	uint16_t id;
 
 	bool sync : 1;
 
 	uint8_t button;
-/* 	read_data[4]
+	/* 	read_data[4]
 	bool a : 1; 0x10
 	bool b : 1; 0x20
 	bool x : 1; 0x40
@@ -23,7 +27,7 @@ struct XboxOneButtonData {
 */
 
 	uint8_t dpad;
-/*	read_data[5]
+	/*	read_data[5]
 	bool dpad_up : 1; 0x01
 	bool dpad_down : 1; 0x02
 	bool dpad_left : 1; 0x04
@@ -45,6 +49,6 @@ struct XboxOneButtonData {
 
 int open_controller();
 int close_controller();
-void print_controller_state(bool, unsigned char*, int);
+void print_controller_state(bool, unsigned char *, int);
 struct XboxOneButtonData *store_data(unsigned char *, struct XboxOneButtonData *);
 void read_controller(bool);
