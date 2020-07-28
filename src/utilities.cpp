@@ -1,8 +1,8 @@
 #include "utilities.hpp"
 
-libusb_device_handle *h;
+//libusb_device_handle *h;
 
-int open_controller()
+int open_controller(libusb_device_handle *h)
 {
 
     /*
@@ -71,7 +71,7 @@ int open_controller()
     return 0;
 }
 
-int close_controller()
+int close_controller(libusb_device_handle *h)
 {
 
     int rls_crm = libusb_release_interface(h, 0);
@@ -142,6 +142,7 @@ struct XboxOneButtonData *store_data(unsigned char *read_data, struct XboxOneBut
     return controller_state;
 }
 
+/*
 void read_controller(bool debug)
 {
     unsigned char read_data[512];
@@ -167,12 +168,13 @@ void read_controller(bool debug)
             print_controller_state(false, read_data, transferred);
         }
 
-        /*
+        
         struct XboxOneButtonData data;
 
 
 
         printf("Message type: %02x \n", data.type);
-        */
+        
     }
 }
+*/

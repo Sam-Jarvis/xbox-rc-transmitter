@@ -17,27 +17,27 @@ TARGET   = xbox-one-s
 
 CC       = gcc
 # compiling flags here
-CFLAGS   = -lusb-1.0 -Wall -I.
+CFLAGS   = -lusb-1.0 -lstdc++ -Wall -I.
 
 LINKER   = gcc
 # linking flags here
-LFLAGS   = -lusb-1.0 -Wall -I. -lm
+LFLAGS   = -lusb-1.0 -lstdc++ -Wall -I. -lm
 
 # change these to proper directories where each file should be
 SRCDIR   = src
 OBJDIR   = obj
 BINDIR   = bin
 
-SOURCES  := $(wildcard $(SRCDIR)/*.c)
-INCLUDES := $(wildcard $(SRCDIR)/*.h)
-OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+SOURCES  := $(wildcard $(SRCDIR)/*.cpp)
+INCLUDES := $(wildcard $(SRCDIR)/*.hpp)
+OBJECTS  := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 rm       = rm -f
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LINKER) $(OBJECTS) $(LFLAGS) -o $@
 	@echo "Linking complete!"
 
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
+$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
 

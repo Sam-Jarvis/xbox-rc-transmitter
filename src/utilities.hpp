@@ -7,7 +7,7 @@
 #include <stdlib.h>
 //#include <RF24-master/SPI.h>
 //#include <nRF24L01.h>
-#include <RF24/RF24.h>
+//#include <RF24/RF24.h>
 
 struct XboxOneButtonData
 {
@@ -47,8 +47,8 @@ struct XboxOneButtonData
 	int16_t stick_right_y;
 };
 
-int open_controller();
-int close_controller();
+int open_controller(libusb_device_handle *);
+int close_controller(libusb_device_handle *);
 void print_controller_state(bool, unsigned char *, int);
 struct XboxOneButtonData *store_data(unsigned char *, struct XboxOneButtonData *);
-void read_controller(bool);
+//void read_controller(bool);

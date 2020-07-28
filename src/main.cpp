@@ -5,14 +5,14 @@ struct XboxOneButtonData data = {0};
 
 void termination_handler(int signum)
 {
-    close_controller();
+    close_controller(h);
     printf("\n%s\n", "killed.");
     exit(0);
 }
 
 int main(int argc, char *argv[])
 {
-    open_controller();
+    open_controller(h);
     signal(SIGINT, termination_handler);
     
     unsigned char read_data[512];
