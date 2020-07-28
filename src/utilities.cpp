@@ -1,4 +1,4 @@
-#include "utilities.h"
+#include "utilities.hpp"
 
 libusb_device_handle *h;
 
