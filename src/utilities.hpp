@@ -7,7 +7,7 @@
 #include <stdlib.h>
 //#include <RF24-master/SPI.h>
 //#include <nRF24L01.h>
-#include <RF24/RF24.h>
+#include <RF24.h>
 
 struct XboxOneButtonData
 {
