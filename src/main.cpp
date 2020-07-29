@@ -3,6 +3,12 @@
 libusb_device_handle *h;
 struct XboxOneButtonData data = {0};
 
+//create an RF24 object
+RF24 radio(9, 8);  // CE, CSN
+
+//address through which two modules communicate.
+const byte address[6] = "00001";
+
 void termination_handler(int signum)
 {
     close_controller(h);
@@ -40,12 +46,6 @@ int main(int argc, char *argv[])
 // Useful code blocks
 
 /*
-//create an RF24 object
-RF24 radio(9, 8);  // CE, CSN
-
-//address through which two modules communicate.
-const byte address[6] = "00001";
-
 void setup()
 {
   radio.begin();
