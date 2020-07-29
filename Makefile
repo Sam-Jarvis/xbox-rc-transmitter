@@ -17,11 +17,11 @@ TARGET   = xbox-one-s
 
 CC       = gcc
 # compiling flags here
-CFLAGS   = -lusb-1.0 -lstdc++ -Wall -I.
+CFLAGS   = -lusb-1.0 -lrf24 -lstdc++ -Wall -I.
 
 LINKER   = gcc
 # linking flags here
-LFLAGS   = -lusb-1.0 -lstdc++ -Wall -I. -lm
+LFLAGS   = -lusb-1.0 -lrf24 -lstdc++ -Wall -I. -lm
 
 # change these to proper directories where each file should be
 SRCDIR   = src
