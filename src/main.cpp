@@ -3,11 +3,9 @@
 libusb_device_handle *h;
 struct XboxOneButtonData data = {0};
 
-//create an RF24 object
-RF24 radio(9, 8);  // CE, CSN
+RF24 radio(17, 0);  // CE, CSN
 
-//address through which two modules communicate.
-const byte address[6] = "00001";
+//const std::byte address[6] = "00001";
 
 void termination_handler(int signum)
 {
@@ -30,13 +28,23 @@ int main(int argc, char *argv[])
 
     printf("%s\n", "Reading controller state ...");
 
+    radio.begin();
+    radio.openWritingPipe(0x7878787878LL);
+    radio.stopListening();
+
     while (1)
     {
+        const char text[] = "Hello World";
+        radio.write(&text, sizeof(text));
+  
+        delay(1000);
+        /*
         libusb_interrupt_transfer(h, endpoint, read_data, sizeof(read_data), &transferred, timeout);
 
         print_controller_state(true, read_data, transferred);
 
         store_data(read_data, &data);
+        */
 
     }
 
@@ -46,24 +54,7 @@ int main(int argc, char *argv[])
 // Useful code blocks
 
 /*
-void setup()
-{
-  radio.begin();
-  
-  //set the address
-  radio.openWritingPipe(address);
-  
-  //Set module as transmitter
-  radio.stopListening();
-}
-void loop()
-{
-  //Send message to receiver
-  const char text[] = "Hello World";
-  radio.write(&text, sizeof(text));
-  
-  delay(1000);
-}
+
 */
 
 /*
