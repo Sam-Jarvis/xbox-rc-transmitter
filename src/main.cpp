@@ -34,18 +34,16 @@ int main(int argc, char *argv[])
 
     while (1)
     {
-        const char text[] = "Hello World";
-        radio.write(&text, sizeof(text));
+        //const char text[] = "Hello World";
+        //radio.write(&text, sizeof(text));
   
         delay(1000);
-        /*
         libusb_interrupt_transfer(h, endpoint, read_data, sizeof(read_data), &transferred, timeout);
 
         print_controller_state(true, read_data, transferred);
 
         store_data(read_data, &data);
-        */
-
+        radio.write(&data->trigger_left, sizeof(data->trigger_left));
     }
 
     return 0;
