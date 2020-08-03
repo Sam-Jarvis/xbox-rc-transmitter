@@ -7,14 +7,14 @@
 #include <stdlib.h>
 //#include <RF24/SPI.h>
 //#include <RF24/nRF24L01.h>
-//#include <RF24/RF24.h>
+#include <RF24/RF24.h>
 
 struct XboxOneButtonData
 {
 	uint8_t type;
 	uint16_t id;
 
-	bool sync : 1;
+	//bool sync : 1;
 
 	uint8_t button;
 	/* 	read_data[4]
@@ -47,8 +47,21 @@ struct XboxOneButtonData
 	int16_t stick_right_y;
 };
 
-int open_controller(libusb_device_handle *);
+struct ShortStatus
+{
+	uint8_t type;
+	uint16_t trigger_left;
+	uint16_t trigger_right;
+
+	int16_t stick_left_x;
+	int16_t stick_left_y;
+	int16_t stick_right_x;
+	int16_t stick_right_y;
+};
+
+libusb_device_handle *open_controller(libusb_device_handle *);
 int close_controller(libusb_device_handle *);
 void print_controller_state(bool, unsigned char *, int);
 struct XboxOneButtonData *store_data(unsigned char *, struct XboxOneButtonData *);
+void store_short_state(unsigned char *, struct XboxOneButtonData *);
 //void read_controller(bool);

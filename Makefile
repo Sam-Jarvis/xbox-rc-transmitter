@@ -16,6 +16,7 @@
 TARGET   = xbox-one-s
 
 CC       = gcc
+
 # compiling flags here
 CFLAGS   = -lusb-1.0 -lrf24 -lstdc++ -Wall -I.
 

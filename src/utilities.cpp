@@ -2,7 +2,7 @@
 
 //libusb_device_handle *h;
 
-int open_controller(libusb_device_handle *h)
+libusb_device_handle *open_controller(libusb_device_handle *h)
 {
 
     /*
@@ -22,7 +22,7 @@ int open_controller(libusb_device_handle *h)
     {
         //fprintf(stderr, "Failed to open device\n");
         perror("failed to open device: ");
-        return 1;
+        exit(1);
     }
     else
     {
@@ -35,7 +35,7 @@ int open_controller(libusb_device_handle *h)
     {
         //printf("%s\n", "device detach: failed");
         perror("kernel detach failed: ");
-        return 1;
+        exit(1);
     }
     else
     {
@@ -48,7 +48,7 @@ int open_controller(libusb_device_handle *h)
     {
         //printf("%s\n", "device claim: failed");
         perror("device claim failed: ");
-        return 1;
+        exit(1);
     }
     else
     {
@@ -68,7 +68,7 @@ int open_controller(libusb_device_handle *h)
         printf("%s\n", "sent start message");
     }
     */
-    return 0;
+    return h;
 }
 
 int close_controller(libusb_device_handle *h)
@@ -140,6 +140,18 @@ struct XboxOneButtonData *store_data(unsigned char *read_data, struct XboxOneBut
     controller_state->stick_right_y = read_data[16];
 
     return controller_state;
+}
+
+void store_short_state(unsigned char *read_data, struct XboxOneButtonData *controller_state)
+{
+    controller_state->type = read_data[0];
+    controller_state->trigger_left = read_data[6];
+    controller_state->trigger_right = read_data[8];
+
+    controller_state->stick_left_x = read_data[10];
+    controller_state->stick_left_y = read_data[12];
+    controller_state->stick_right_x = read_data[14];
+    controller_state->stick_right_y = read_data[16];
 }
 
 /*
