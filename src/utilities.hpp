@@ -6,8 +6,8 @@
 #include <signal.h>
 #include <stdlib.h>
 //#include <RF24/SPI.h>
-#include <RF24/nRF24L01.h>
-#include <RF24/RF24.h>
+//#include <RF24/nRF24L01.h>
+//#include <RF24/RF24.h>
 
 struct XboxOneButtonData
 {

@@ -3,7 +3,7 @@
 libusb_device_handle *h;
 struct XboxOneButtonData data = {0};
 
-RF24 radio(17, 0);  // CE, CSN
+//RF24 radio(17, 0);  // CE, CSN
 
 //const std::byte address[6] = "00001";
 
@@ -18,9 +18,8 @@ int main(int argc, char *argv[])
 {
     open_controller(h);
     signal(SIGINT, termination_handler);
-    
     unsigned char read_data[512];
-    memset(read_data, 0, 5);
+    memset(read_data, 0, sizeof(read_data));
 
     int transferred;
     int endpoint = 0x81;
@@ -28,22 +27,24 @@ int main(int argc, char *argv[])
 
     printf("%s\n", "Reading controller state ...");
 
+    /*
     radio.begin();
     radio.openWritingPipe(0x7878787878LL);
     radio.stopListening();
+    */
 
     while (1)
     {
         //const char text[] = "Hello World";
         //radio.write(&text, sizeof(text));
-  
-        delay(1000);
+        //delay(1000);
+
         libusb_interrupt_transfer(h, endpoint, read_data, sizeof(read_data), &transferred, timeout);
 
-        print_controller_state(true, read_data, transferred);
+        //print_controller_state(true, read_data, transferred);
 
-        store_data(read_data, &data);
-        radio.write(&data->trigger_left, sizeof(data->trigger_left));
+        //store_data(read_data, &data);
+        //radio.write(&data->trigger_left, sizeof(data->trigger_left));
     }
 
     return 0;
